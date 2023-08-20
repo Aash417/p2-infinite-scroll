@@ -1,13 +1,26 @@
 // unsplash api
 const count = 10;
-const apiKey = `_sULQh3YvcDIVU-yhju05WKd_S_8c1Y5T8Y3Xf0LBy8`;
+let photosArr = [];
+let ready = false;
+let imagesLoaded = 0;
+let totalImages = 0;
 
+const apiKey = `_sULQh3YvcDIVU-yhju05WKd_S_8c1Y5T8Y3Xf0LBy8`;
 const apiURL = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
 const imageContainer = document.querySelector('#image-container');
 const loader = document.getElementById('loader');
 
-let photosArr = [];
+// check if all images were loaded
+function imageloaded() {
+  imagesLoaded++;
+  //   console.log(imagesLoaded);
+  if (imagesLoaded === totalImages) {
+    ready = true;
+    loader.hidden = true;
+  }
+}
 
+// Helper function to set attributes
 function setAttr(element, attribute) {
   for (const key in attribute) {
     // console.log(attribute[key]);
@@ -16,9 +29,11 @@ function setAttr(element, attribute) {
 }
 
 // create elements for links and photos
-function displayPhotos(photosArr) {
+function displayPhotos() {
+  imagesLoaded = 0;
+  totalImages = Object.keys(photosArr).length;
+
   photosArr.forEach((photo) => {
-    // console.log(photo);
     // create <a> link to unsplash
     const item = document.createElement('a');
     // item.setAttribute('href', photo.links.html);
@@ -36,9 +51,11 @@ function displayPhotos(photosArr) {
       title: photo.alt_description,
     });
 
+    // Event listner , check when each is finished loading
+    img.addEventListener('load', imageloaded);
+
     // put <img> inside <a> then put both inside image container
     item.appendChild(img);
-
     imageContainer.appendChild(item);
   });
 }
@@ -48,16 +65,22 @@ async function getPhotos() {
   try {
     const response = await fetch(apiURL);
     photosArr = await response.json();
-    console.log(photosArr);
-    displayPhotos(photosArr);
+
+    displayPhotos();
   } catch (error) {}
 }
 
 // check to see if scrolling near bottom of page , load more photos
-// window.addEventListener('scroll', () => {
-//   console.log('scrolled');
-// });
+window.addEventListener('scroll', () => {
+  if (
+    window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000 &&
+    ready
+  ) {
+    ready = false;
+    getPhotos();
+    // console.log('scrolled');
+  }
+});
 
 // on load
 getPhotos();
-console.log(8);
