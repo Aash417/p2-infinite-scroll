@@ -13,7 +13,6 @@ const loader = document.getElementById('loader');
 // check if all images were loaded
 function imageloaded() {
   imagesLoaded++;
-  //   console.log(imagesLoaded);
   if (imagesLoaded === totalImages) {
     ready = true;
     loader.hidden = true;
@@ -23,7 +22,6 @@ function imageloaded() {
 // Helper function to set attributes
 function setAttr(element, attribute) {
   for (const key in attribute) {
-    // console.log(attribute[key]);
     element.setAttribute(key, attribute[key]);
   }
 }
@@ -36,15 +34,19 @@ function displayPhotos() {
   photosArr.forEach((photo) => {
     // create <a> link to unsplash
     const item = document.createElement('a');
-    // item.setAttribute('href', photo.links.html);
-    // item.setAttribute('target', '_blank');
+    /*deprecated
+    item.setAttribute('href', photo.links.html);
+    item.setAttribute('target', '_blank');
+    */
     setAttr(item, { href: photo.links.html, target: '_blank' });
 
     // create a <img> for photos
     const img = document.createElement('img');
-    // img.setAttribute('src', photo.urls.regular);
-    // img.setAttribute('alt', photo.alt_description);
-    // img.setAttribute('title', photo.alt_description);
+    /*deprecated
+    img.setAttribute('src', photo.urls.regular);
+    img.setAttribute('alt', photo.alt_description);
+    img.setAttribute('title', photo.alt_description);
+    */
     setAttr(img, {
       src: photo.urls.regular,
       alt: photo.alt_description,
@@ -78,7 +80,6 @@ window.addEventListener('scroll', () => {
   ) {
     ready = false;
     getPhotos();
-    // console.log('scrolled');
   }
 });
 
